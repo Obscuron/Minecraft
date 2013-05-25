@@ -1,0 +1,20 @@
+[
+{
+  "modid": "MyMod",
+  "name": "My Mod",
+  "description": "This is a description",
+  "version": "0.0.0",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "Obscuron"
+  ],
+  "credits": "Thanks go here",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
