@@ -15,9 +15,9 @@ import obscuron.mymod.lib.Reference;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
-public class SpecialBlock extends Block {
+public class MySpecialBlock extends Block {
 
-    public SpecialBlock(int id) {
+    public MySpecialBlock(int id) {
         super(id, Material.ground);
         setUnlocalizedName("specialBlock");
         setCreativeTab(CreativeTabs.tabBlock);

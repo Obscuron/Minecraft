@@ -3,7 +3,7 @@
   "modid": "MyMod",
   "name": "My Mod",
   "description": "This is a description",
-  "version": "0.0.0",
+  "version": "@VERSION@",
   "url": "",
   "updateUrl": "",
   "authorList": [

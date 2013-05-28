@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import obscuron.mymod.block.MyBlock;
 import obscuron.mymod.block.MyOre;
-import obscuron.mymod.block.SpecialBlock;
+import obscuron.mymod.block.MySpecialBlock;
 import obscuron.mymod.item.MyItem;
 import obscuron.mymod.lib.Reference;
 import obscuron.mymod.network.PacketHandler;
@@ -36,13 +36,13 @@ public class MyMod {
     @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
     public static CommonProxy proxy;
     
-    private static final Item myItem = new MyItem(5000);
-    private static final Item myIngot = new MyItem(5001).setMaxStackSize(16).setUnlocalizedName("myIngot");
+    private static final Item myItem = new MyItem(4800);
+    private static final Item myIngot = new MyItem(4801).setMaxStackSize(16).setUnlocalizedName("myIngot");
     
     private static final Block myDirt = new MyBlock(500, Material.rock).setHardness(1.0F).setStepSound(Block.soundGravelFootstep).setUnlocalizedName("myDirt");
     private static final Block myOre = new MyOre(501, Material.iron);
     
-    private static final Block specialBlock = new SpecialBlock(502);
+    private static final Block mySpecialBlock = new MySpecialBlock(502);
     
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
@@ -57,20 +57,24 @@ public class MyMod {
         ItemStack myItemStack = new ItemStack(myItem);
         ItemStack myIngotStack = new ItemStack(myIngot);
         ItemStack myDirtStack = new ItemStack(myDirt);
+        ItemStack myOreStack = new ItemStack(myOre);
+        ItemStack mySpecialStack = new ItemStack(mySpecialBlock);
         
         GameRegistry.addShapelessRecipe(myItemStack, dirtStack, dirtStack, dirtStack);
         
         GameRegistry.addRecipe(myDirtStack, "1 1", "   ", "1 1", '1', dirtStack);
+        GameRegistry.addRecipe(myOreStack, "1 1", " 1 ", "1 1", '1', dirtStack);
+        GameRegistry.addRecipe(mySpecialStack, "111", "111", "111", '1', dirtStack);
         
         GameRegistry.addSmelting(myOre.blockID, myIngotStack, 10.0f);
         
         GameRegistry.registerBlock(myDirt, "myDirt");
         GameRegistry.registerBlock(myOre, "myOre");
-        GameRegistry.registerBlock(specialBlock, "specialBlock");
+        GameRegistry.registerBlock(mySpecialBlock, "mySpecialBlock");
         
         LanguageRegistry.addName(myDirt, "My Dirt");
         LanguageRegistry.addName(myOre, "My Ore");
-        LanguageRegistry.addName(specialBlock, "Special Block");
+        LanguageRegistry.addName(mySpecialBlock, "My Special Block");
         
         LanguageRegistry.addName(myItem, "My Item");
         LanguageRegistry.addName(myIngot, "My Ingot");

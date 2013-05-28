@@ -10,7 +10,7 @@ public class MyOre extends Block {
         super(id, material);
         setHardness(4.0F);
         setStepSound(Block.soundStoneFootstep);
-        setUnlocalizedName("genericOre");
+        setUnlocalizedName("myOre");
         setCreativeTab(CreativeTabs.tabBlock);
     }
 

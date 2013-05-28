@@ -32,8 +32,8 @@ public class PacketHandler implements IPacketHandler {
                 e.printStackTrace();
                 return;
         }
-       
-        System.out.println(randomInt1 + " " + randomInt2);
+        
+        System.out.println("Here are some random integers: " + randomInt1 + " " + randomInt2);
     }
 
 }
