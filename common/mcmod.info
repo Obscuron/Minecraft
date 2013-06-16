@@ -1,7 +1,7 @@
 [
 {
-  "modid": "MyMod",
-  "name": "My Mod",
+  "modid": "mKin",
+  "name": "Modular Kinetics",
   "description": "This is a description",
   "version": "@VERSION@",
   "url": "",
