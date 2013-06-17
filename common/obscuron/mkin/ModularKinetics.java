@@ -1,6 +1,9 @@
 package obscuron.mkin;
 
 import net.minecraft.creativetab.CreativeTabs;
+import obscuron.mkin.core.BlocksHandler;
+import obscuron.mkin.core.CreativeTabKinetics;
+import obscuron.mkin.core.LanguageHandler;
 import obscuron.mkin.lib.Reference;
 import obscuron.mkin.network.PacketHandler;
 import obscuron.mkin.proxy.CommonProxy;
@@ -25,7 +28,7 @@ public class ModularKinetics {
     @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
     public static CommonProxy proxy;
     
-    public static CreativeTabs tabKinetics = new CreativeTabs(CreativeTabs.getNextID(), Reference.MOD_ID);
+    public static CreativeTabs tabKinetics = new CreativeTabKinetics(CreativeTabs.getNextID(), Reference.MOD_ID);
     
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
@@ -34,6 +37,11 @@ public class ModularKinetics {
     
     @Init
     public void load(FMLInitializationEvent event) {
+        // Initializes the languages (namely en_US)
+        LanguageHandler.init();
+        
+        // Initializes blocks into the game registry
+        BlocksHandler.init();
         
     }
     
