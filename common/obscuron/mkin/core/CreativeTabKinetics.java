@@ -13,7 +13,7 @@ public class CreativeTabKinetics extends CreativeTabs {
     @Override
     @SideOnly(Side.CLIENT)
     public int getTabIconItemIndex() {
-        return 1; //TODO: change icon
+        return BlocksHandler.kineticInterface.blockID;
     }
 
 }
