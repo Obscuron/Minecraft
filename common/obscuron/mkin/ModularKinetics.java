@@ -1,12 +1,15 @@
 package obscuron.mkin;
 
+import net.minecraft.creativetab.CreativeTabs;
 import obscuron.mkin.lib.Reference;
 import obscuron.mkin.network.PacketHandler;
+import obscuron.mkin.proxy.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -18,6 +21,11 @@ public class ModularKinetics {
     
     @Instance(Reference.MOD_ID)
     public static ModularKinetics instance;
+    
+    @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
+    public static CommonProxy proxy;
+    
+    public static CreativeTabs tabKinetics = new CreativeTabs(CreativeTabs.getNextID(), Reference.MOD_ID);
     
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
