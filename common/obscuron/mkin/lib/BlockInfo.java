@@ -2,7 +2,7 @@ package obscuron.mkin.lib;
 
 public class BlockInfo {
     
-    /* Current Block Ids */
+    /* Current Block Ids */ // TODO: change this
     public static int PROGRAMMER_ID = 2400;
     public static int INTERFACE_ID = 2401;
     

@@ -3,6 +3,7 @@ package obscuron.mkin;
 import net.minecraft.creativetab.CreativeTabs;
 import obscuron.mkin.core.BlocksHandler;
 import obscuron.mkin.core.CreativeTabKinetics;
+import obscuron.mkin.core.ItemsHandler;
 import obscuron.mkin.core.LanguageHandler;
 import obscuron.mkin.lib.Reference;
 import obscuron.mkin.network.PacketHandler;
@@ -42,6 +43,9 @@ public class ModularKinetics {
         
         // Initializes blocks into the game registry
         BlocksHandler.init();
+        
+        // Initializes items into the game registry
+        ItemsHandler.init();
         
     }
     
