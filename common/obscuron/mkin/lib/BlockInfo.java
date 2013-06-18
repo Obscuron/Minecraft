@@ -2,13 +2,13 @@ package obscuron.mkin.lib;
 
 public class BlockInfo {
     
-    /* Current Block Ids */ // TODO: change this
-    public static int PROGRAMMER_ID = 2400;
-    public static int INTERFACE_ID = 2401;
+    /* Current Block Ids */
+    public static int PROGRAMMER_ID;
+    public static int INTERFACE_ID;
     
     /* Default Block Ids */
-    public static final int DEFAULT_PROGRAMMER_ID = 2400;
-    public static final int DEFAULT_INTERFACE_ID = 2401;
+    public static final int DEFAULT_PROGRAMMER_ID = 3500;
+    public static final int DEFAULT_INTERFACE_ID = 3501;
     
     /* Unlocalized Names */
     public static final String PROGRAMMER_NAME = "kineticProgrammer";

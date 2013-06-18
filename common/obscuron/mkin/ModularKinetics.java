@@ -1,7 +1,10 @@
 package obscuron.mkin;
 
+import java.io.File;
+
 import net.minecraft.creativetab.CreativeTabs;
 import obscuron.mkin.core.BlocksHandler;
+import obscuron.mkin.core.ConfigurationHandler;
 import obscuron.mkin.core.CreativeTabKinetics;
 import obscuron.mkin.core.ItemsHandler;
 import obscuron.mkin.core.LanguageHandler;
@@ -33,19 +36,20 @@ public class ModularKinetics {
     
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
-        
+        File cfgfile = new File(event.getModConfigurationDirectory().getAbsolutePath() + Reference.CONFIG_FILE_NAME);
+        ConfigurationHandler.init(cfgfile);
     }
     
     @Init
-    public void load(FMLInitializationEvent event) {
-        // Initializes the languages (namely en_US)
-        LanguageHandler.init();
-        
+    public void load(FMLInitializationEvent event) {        
         // Initializes blocks into the game registry
         BlocksHandler.init();
         
         // Initializes items into the game registry
         ItemsHandler.init();
+        
+        // Initializes the languages (namely en_US)
+        LanguageHandler.init();
         
     }
     

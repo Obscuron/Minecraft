@@ -8,10 +8,13 @@ import obscuron.mkin.lib.BlockInfo;
 
 public class BlocksHandler {
     
-    public static Block kineticProgrammer = new BlockProgrammer(BlockInfo.PROGRAMMER_ID);
-    public static Block kineticInterface = new BlockInterface(BlockInfo.INTERFACE_ID);
+    public static Block kineticProgrammer;
+    public static Block kineticInterface;
     
-    public static void init() {        
+    public static void init() {
+        kineticProgrammer = new BlockProgrammer(BlockInfo.PROGRAMMER_ID);
+        kineticInterface = new BlockInterface(BlockInfo.INTERFACE_ID);
+        
         GameRegistry.registerBlock(kineticProgrammer, BlockInfo.PROGRAMMER_NAME);
         GameRegistry.registerBlock(kineticInterface, BlockInfo.INTERFACE_NAME);
     }
