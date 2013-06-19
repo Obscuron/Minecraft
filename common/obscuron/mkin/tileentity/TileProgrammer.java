@@ -12,7 +12,7 @@ public class TileProgrammer extends TileEntity implements IInventory {
 
     private ItemStack[] inventory;
 
-    public static final int SIZE = 9*3;
+    public static final int SIZE = 9*6;
 
     public TileProgrammer() {
         super();
