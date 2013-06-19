@@ -37,6 +37,11 @@ public class BlockProgrammer extends BlockContainer {
     }
     
     @Override
+    public TileEntity createNewTileEntity(World world) {
+        return new TileProgrammer();
+    }
+    
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i1, float f1, float f2, float f3) {
         if (player.isSneaking()) {
             return false;
@@ -65,34 +70,32 @@ public class BlockProgrammer extends BlockContainer {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
             
-            if (itemStack == null) {
-                continue;
-            }
-            
-            float dx = rand.nextFloat() * 0.8F + 0.1F;
-            float dy = rand.nextFloat() * 0.8F + 0.1F;
-            float dz = rand.nextFloat() * 0.8F + 0.1F;
-            
-            while (itemStack.stackSize > 0) {
-                int amount = rand.nextInt(21) + 10;
-                if (amount > itemStack.stackSize) {
-                    amount = itemStack.stackSize;
-                }
+            if (itemStack != null) {
+                float dx = rand.nextFloat() * 0.8F + 0.1F;
+                float dy = rand.nextFloat() * 0.8F + 0.1F;
+                float dz = rand.nextFloat() * 0.8F + 0.1F;
                 
-                EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, new ItemStack(itemStack.itemID, amount, itemStack.getItemDamage()));
+                while (itemStack.stackSize > 0) {
+                    int amount = rand.nextInt(21) + 10;
+                    if (amount > itemStack.stackSize) {
+                        amount = itemStack.stackSize;
+                    }
+                    
+                    EntityItem entityItem = new EntityItem(world, x + dx, y + dy, z + dz, new ItemStack(itemStack.itemID, amount, itemStack.getItemDamage()));
 
-                if (itemStack.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+                    if (itemStack.hasTagCompound()) {
+                        entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+                    }
+                    
+                    float f = 0.05F;
+                    entityItem.motionX = rand.nextGaussian() * f;
+                    entityItem.motionY = rand.nextGaussian() * f + 0.2F;
+                    entityItem.motionZ = rand.nextGaussian() * f;
+                    
+                    world.spawnEntityInWorld(entityItem);
+                    
+                    itemStack.stackSize -= amount;
                 }
-                
-                float f = 0.05F;
-                entityItem.motionX = rand.nextGaussian() * f;
-                entityItem.motionY = rand.nextGaussian() * f + 0.2F;
-                entityItem.motionZ = rand.nextGaussian() * f;
-                
-                world.spawnEntityInWorld(entityItem);
-                
-                itemStack.stackSize -= amount;
             }
         }
     }
@@ -110,11 +113,6 @@ public class BlockProgrammer extends BlockContainer {
     @Override
     public Icon getIcon(int side, int metadata) {
         return textures[side > 1 ? 2 : side];
-    }
-    
-    @Override
-    public TileEntity createNewTileEntity(World world) {
-        return new TileProgrammer();
     }
 
 }
