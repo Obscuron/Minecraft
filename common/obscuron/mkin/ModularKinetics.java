@@ -21,6 +21,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION)
 @NetworkMod(channels = { Reference.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -36,12 +37,10 @@ public class ModularKinetics {
     
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
+        // Loads the configuration file
         File cfgfile = new File(event.getModConfigurationDirectory().getAbsolutePath() + Reference.CONFIG_FILE_NAME);
         ConfigurationHandler.init(cfgfile);
-    }
-    
-    @Init
-    public void load(FMLInitializationEvent event) {        
+        
         // Initializes blocks into the game registry
         BlocksHandler.init();
         
@@ -50,7 +49,12 @@ public class ModularKinetics {
         
         // Initializes the languages (namely en_US)
         LanguageHandler.init();
-        
+    }
+    
+    @Init
+    public void load(FMLInitializationEvent event) {        
+        // Registers the proxy to handle Guis
+        NetworkRegistry.instance().registerGuiHandler(instance, proxy);
     }
     
     @PostInit
