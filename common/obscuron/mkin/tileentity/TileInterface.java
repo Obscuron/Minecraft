@@ -81,8 +81,14 @@ public class TileInterface extends TileEntity implements IInventory {
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-        return true;
+    public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
+        if (worldObj == null) {
+            return true;
+        }
+        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
+            return false;
+        }
+        return entityPlayer.getDistanceSq((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D) <= 64D;
     }
 
     @Override

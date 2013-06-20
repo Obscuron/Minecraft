@@ -8,7 +8,7 @@ public class GuiInfo {
     
     /* Texture locations */
     public static final String GUI_LOCATION = "/mods/mkin/textures/gui/";
-    public static final String PROGRAMMER_GUI_TEXTURE = GUI_LOCATION + "kineticProgrammerGui";
-    public static final String INTERFACE_GUI_TEXTURE = GUI_LOCATION + "kineticInterfaceGui";
+    public static final String PROGRAMMER_GUI_TEXTURE = GUI_LOCATION + "kineticProgrammerGui.png";
+    public static final String INTERFACE_GUI_TEXTURE = GUI_LOCATION + "kineticInterfaceGui.png";
 
 }
