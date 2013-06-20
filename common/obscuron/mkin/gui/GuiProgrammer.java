@@ -24,7 +24,7 @@ public class GuiProgrammer extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString(StatCollector.translateToLocal(tileProgrammer.getInvName()), 8, 6, 0x404040);
-        fontRenderer.drawString(ContainerInfo.CONTAINER_INVENTORY, 8, ySize - 96 + 2, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal(ContainerInfo.CONTAINER_INVENTORY), 8, ySize - 96 + 2, 0x404040);
     }
 
     @Override

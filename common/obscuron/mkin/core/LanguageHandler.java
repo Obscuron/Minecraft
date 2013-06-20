@@ -1,6 +1,7 @@
 package obscuron.mkin.core;
 
 import obscuron.mkin.lib.BlockInfo;
+import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.lib.Reference;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -17,6 +18,10 @@ public class LanguageHandler {
         
         /* Adds item names to the language registry */
         LanguageRegistry.addName(ItemsHandler.kineticCard, ItemInfo.CARD_FULLNAME);
+        
+        /* Adds container names to the language registry */
+        LanguageRegistry.instance().addStringLocalization(ContainerInfo.PROGRAMMER_CONTAINER, BlockInfo.PROGRAMMER_FULLNAME);
+        LanguageRegistry.instance().addStringLocalization(ContainerInfo.INTERFACE_CONTAINER, BlockInfo.INTERFACE_FULLNAME);
     }
 
 }

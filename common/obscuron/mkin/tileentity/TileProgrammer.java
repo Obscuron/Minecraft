@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import obscuron.mkin.lib.BlockInfo;
+import obscuron.mkin.lib.ContainerInfo;
 
 public class TileProgrammer extends TileEntity implements IInventory {
 
@@ -67,7 +67,7 @@ public class TileProgrammer extends TileEntity implements IInventory {
 
     @Override
     public String getInvName() {
-        return BlockInfo.PROGRAMMER_NAME;
+        return ContainerInfo.PROGRAMMER_CONTAINER;
     }
 
     @Override

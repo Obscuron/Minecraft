@@ -1,6 +1,6 @@
 package obscuron.mkin.tileentity;
 
-import obscuron.mkin.lib.BlockInfo;
+import obscuron.mkin.lib.ContainerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -67,7 +67,7 @@ public class TileInterface extends TileEntity implements IInventory {
 
     @Override
     public String getInvName() {
-        return BlockInfo.INTERFACE_NAME;
+        return ContainerInfo.INTERFACE_CONTAINER;
     }
 
     @Override

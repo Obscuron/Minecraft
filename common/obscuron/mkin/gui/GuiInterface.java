@@ -18,13 +18,13 @@ public class GuiInterface extends GuiContainer {
         super(new ContainerInterface(inventoryPlayer, tile));
         tileInterface = tile;
         xSize = 176;
-        ySize = 222;
+        ySize = 166;
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString(StatCollector.translateToLocal(tileInterface.getInvName()), 8, 6, 0x404040);
-        fontRenderer.drawString(ContainerInfo.CONTAINER_INVENTORY, 8, ySize - 96 + 2, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal(ContainerInfo.CONTAINER_INVENTORY), 8, ySize - 96 + 2, 0x404040);
     }
 
     @Override
