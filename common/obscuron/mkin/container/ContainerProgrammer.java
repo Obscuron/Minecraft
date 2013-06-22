@@ -1,15 +1,10 @@
 package obscuron.mkin.container;
 
 import obscuron.mkin.tileentity.TileProgrammer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
-public class ContainerProgrammer extends Container {
-    
-    private TileProgrammer tileProgrammer;
+public class ContainerProgrammer extends KineticContainer {
     
     private final int PROGRAMMER_INVENTORY_ROWS = 6;
     private final int PROGRAMMER_INVENTORY_COLUMNS = 9;
@@ -18,7 +13,7 @@ public class ContainerProgrammer extends Container {
     private final int PLAYER_INVENTORY_COLUMNS = 9;
 
     public ContainerProgrammer(InventoryPlayer inventoryPlayer, TileProgrammer tile) {
-        tileProgrammer = tile;
+        super(tile);
         
         // Chest slots
         for (int r = 0; r < PROGRAMMER_INVENTORY_ROWS; r++) {
@@ -41,38 +36,9 @@ public class ContainerProgrammer extends Container {
         
     }
     
-    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex) {
-        ItemStack newItemStack = null;
-        Slot slot = (Slot) inventorySlots.get(slotIndex);
-        
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemStack = slot.getStack();
-            newItemStack = itemStack.copy();
-            
-            if (slotIndex < PROGRAMMER_INVENTORY_ROWS * PROGRAMMER_INVENTORY_COLUMNS) {
-                if (!this.mergeItemStack(itemStack, PROGRAMMER_INVENTORY_ROWS * PROGRAMMER_INVENTORY_COLUMNS, inventorySlots.size(), false)) { 
-                    return null;
-                }
-            }
-            else if (!this.mergeItemStack(itemStack, 0, PROGRAMMER_INVENTORY_ROWS * PROGRAMMER_INVENTORY_COLUMNS, false)) {
-                return null;
-            }
-            
-            if (itemStack.stackSize == 0) {
-                slot.putStack((ItemStack) null);
-            }
-            else {
-                slot.onSlotChanged();
-            }
-            
-        }
-        
-        return newItemStack;
-    }
-
     @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return tileProgrammer.isUseableByPlayer(entityPlayer);
+    protected int containerSize() {
+        return PROGRAMMER_INVENTORY_ROWS * PROGRAMMER_INVENTORY_COLUMNS;
     }
 
 }
