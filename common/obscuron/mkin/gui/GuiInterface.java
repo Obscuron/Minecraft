@@ -1,5 +1,6 @@
 package obscuron.mkin.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
@@ -13,6 +14,21 @@ import org.lwjgl.opengl.GL11;
 public class GuiInterface extends GuiContainer {
 
     private TileInterface tileInterface;
+    
+    private int xStart;
+    private int yStart;
+    
+    private String[] text = {"button0", "button1", "button2"};
+    private int index = 0;
+    
+    @Override
+    public void initGui() {
+        super.initGui();
+        buttonList.clear();
+        xStart = (width - xSize) / 2;
+        yStart = (height - ySize) / 2;
+        buttonList.add(new GuiButton(0, xStart + 8, yStart + 30, 100, 20, text[index]));
+    }
 
     public GuiInterface(InventoryPlayer inventoryPlayer, TileInterface tile) {
         super(new ContainerInterface(inventoryPlayer, tile));
@@ -31,9 +47,19 @@ public class GuiInterface extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(GuiInfo.INTERFACE_GUI_TEXTURE);
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
         drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
+    }
+    
+    @Override
+    public void actionPerformed(GuiButton button) {
+        if (button.id == 0) {
+            index++;
+            if (index >= text.length) {
+                index = 0;
+            }
+            buttonList.clear();
+            buttonList.add(new GuiButton(0, xStart + 8, yStart + 30, 100, 20, text[index]));
+        }
     }
 
 }
