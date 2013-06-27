@@ -3,10 +3,13 @@ package obscuron.mkin.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import obscuron.mkin.container.ContainerInterface;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.GuiInfo;
+import obscuron.mkin.network.packet.KineticPacket;
+import obscuron.mkin.network.packet.PacketProgrammer;
 import obscuron.mkin.tileentity.TileInterface;
 
 import org.lwjgl.opengl.GL11;
@@ -53,6 +56,20 @@ public class GuiInterface extends GuiContainer {
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 0) {
+            if (index == 0) {
+                ItemStack itemStack = tileInterface.getStackInSlot(0);
+                if (itemStack != null) {
+                    int size = 2 * itemStack.stackSize;
+                    if (size > itemStack.getItem().getItemStackLimit()) {
+                        size = itemStack.getItem().getItemStackLimit();
+                    }
+                    itemStack.stackSize = size;
+                    tileInterface.onInventoryChanged();
+                }
+                PacketProgrammer packet = new PacketProgrammer();
+                packet.readInfo(tileInterface);
+                packet.sendPacket();
+            }
             index++;
             if (index >= text.length) {
                 index = 0;

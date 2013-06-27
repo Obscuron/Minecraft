@@ -22,10 +22,17 @@ public class TileProgrammer extends KineticInventoryTile {
         return ContainerInfo.PROGRAMMER_CONTAINER;
     }
     
-//    @Override
-//    public void updateEntity() {
-//        super.updateEntity();
-//        if(!worldObj.isRemote) {
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        if(!worldObj.isRemote) {
+            ItemStack itemStack = getStackInSlot(0);
+            if (itemStack != null) {
+                int size = Math.min(itemStack.getItem().getItemStackLimit(), itemStack.stackSize * 2);
+                itemStack.stackSize = size;
+                onInventoryChanged();
+                System.out.println("hi");
+            }
 //            int x = this.xCoord;
 //            int y = this.yCoord;
 //            int z = this.zCoord;
@@ -41,7 +48,7 @@ public class TileProgrammer extends KineticInventoryTile {
 //                    }
 //                }
 //            }
-//        }
-//    }
+        }
+    }
     
 }

@@ -63,7 +63,7 @@ public class ModularKinetics {
     
     @PostInit
     public void postInit(FMLPostInitializationEvent event) {
-        
+        // NOOP
     }
 
 }
