@@ -70,11 +70,6 @@ public abstract class KineticInventoryTile extends TileEntity implements IInvent
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
     public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
         if (worldObj == null) {
             return true;

@@ -29,7 +29,7 @@ public abstract class KineticContainer extends Container {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemStack, 0, containerSize(), false)) {
+            else if (!this.mergeFromInv(itemStack)) {
                 return null;
             }
             
@@ -43,6 +43,10 @@ public abstract class KineticContainer extends Container {
         }
         
         return newItemStack;
+    }
+    
+    protected boolean mergeFromInv(ItemStack itemStack) {
+        return this.mergeItemStack(itemStack, 0, containerSize(), false);
     }
     
     @Override

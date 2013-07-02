@@ -23,6 +23,7 @@ public class GuiProgrammer extends GuiContainer {
     private final int ENCODE_ID = 0;
     private GuiButton encodeButton;
     
+    @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
         super.initGui();
