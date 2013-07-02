@@ -1,24 +1,43 @@
 package obscuron.mkin.gui;
 
-import org.lwjgl.opengl.GL11;
-
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import obscuron.mkin.container.ContainerProgrammer;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.GuiInfo;
+import obscuron.mkin.network.packet.PacketProgrammer;
 import obscuron.mkin.tileentity.TileProgrammer;
+
+import org.lwjgl.opengl.GL11;
 
 public class GuiProgrammer extends GuiContainer {
     
     private TileProgrammer tileProgrammer;
+    
+    private int xStart;
+    private int yStart;
+    
+    private final int ENCODE_ID = 0;
+    private GuiButton encodeButton;
+    
+    @Override
+    public void initGui() {
+        super.initGui();
+        buttonList.clear();
+        xStart = (width - xSize) / 2;
+        yStart = (height - ySize) / 2;
+        encodeButton = new GuiButton(ENCODE_ID, xStart + 8, yStart + 16, 60, 20, "Encode");
+        this.buttonList.add(encodeButton);
+    }
 
     public GuiProgrammer(InventoryPlayer inventoryPlayer, TileProgrammer tile) {
         super(new ContainerProgrammer(inventoryPlayer, tile));
         tileProgrammer = tile;
         xSize = 176;
-        ySize = 222;
+        ySize = 166;
     }
     
     @Override
@@ -31,9 +50,27 @@ public class GuiProgrammer extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(GuiInfo.PROGRAMMER_GUI_TEXTURE);
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
         drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
+    }
+    
+    @Override
+    public void actionPerformed(GuiButton button) {
+        switch (button.id) {
+            case ENCODE_ID:
+                ItemStack itemStack = tileProgrammer.getStackInSlot(0);
+                if (itemStack != null) {
+                    int size = 2 * itemStack.stackSize;
+                    if (size > itemStack.getItem().getItemStackLimit()) {
+                        size = itemStack.getItem().getItemStackLimit();
+                    }
+                    itemStack.stackSize = size;
+                    tileProgrammer.onInventoryChanged();
+                }
+                PacketProgrammer packet = new PacketProgrammer();
+                packet.readInfo(tileProgrammer);
+                packet.sendPacket();
+        }
+        
     }
 
 }

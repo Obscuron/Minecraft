@@ -4,15 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import obscuron.mkin.lib.Reference;
-import obscuron.mkin.tileentity.TileInterface;
+import obscuron.mkin.tileentity.TileProgrammer;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class PacketProgrammer extends KineticPacket {
     
@@ -34,7 +33,7 @@ public class PacketProgrammer extends KineticPacket {
         
     }
     
-    public void readInfo(TileInterface tileProgrammer) {
+    public void readInfo(TileProgrammer tileProgrammer) {
         dimension = tileProgrammer.getWorldObj().provider.dimensionId;
         x = tileProgrammer.xCoord;
         y = tileProgrammer.yCoord;
@@ -45,8 +44,8 @@ public class PacketProgrammer extends KineticPacket {
     public void execute() {
         World world = DimensionManager.getWorld(dimension);
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        if (tile instanceof TileInterface) {
-            TileInterface tileProgrammer = (TileInterface) tile;
+        if (tile instanceof TileProgrammer) {
+            TileProgrammer tileProgrammer = (TileProgrammer) tile;
             ItemStack itemStack = tileProgrammer.getStackInSlot(0);
             if (itemStack != null) {
                 int size = 2 * itemStack.stackSize;
