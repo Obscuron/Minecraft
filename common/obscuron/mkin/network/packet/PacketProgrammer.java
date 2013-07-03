@@ -9,8 +9,10 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import obscuron.mkin.item.ItemCard;
 import obscuron.mkin.lib.Reference;
 import obscuron.mkin.tileentity.TileProgrammer;
+import obscuron.mkin.util.NBTWrapper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class PacketProgrammer extends KineticPacket {
@@ -47,13 +49,14 @@ public class PacketProgrammer extends KineticPacket {
         if (tile instanceof TileProgrammer) {
             TileProgrammer tileProgrammer = (TileProgrammer) tile;
             ItemStack itemStack = tileProgrammer.getStackInSlot(0);
-            if (itemStack != null) {
-                int size = 2 * itemStack.stackSize;
-                if (size > itemStack.getItem().getItemStackLimit()) {
-                    size = itemStack.getItem().getItemStackLimit();
+            ItemStack card = tileProgrammer.getStackInSlot(1);
+            if (card != null && itemStack != null) {
+                NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
+                if (tags.getByte("id") == 0) {
+                    tags.setByte("id", (byte) 1);
+                    tags.setInt("itemId", itemStack.itemID);
+                    tileProgrammer.onInventoryChanged();
                 }
-                itemStack.stackSize = size;
-                tileProgrammer.onInventoryChanged();
             }
         }
     }

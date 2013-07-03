@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StringTranslate;
+import net.minecraft.world.World;
 import obscuron.mkin.ModularKinetics;
 import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.lib.Reference;
@@ -15,9 +17,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCard extends Item {
     
-    private static final String TAG_NAME = ItemInfo.CARD_NAME;
-    private static final String[] ID_LIST = {
-        "Empty"
+    public static final String TAG_NAME = ItemInfo.CARD_NAME;
+    public static final String[] ID_LIST = {
+        "Empty",
+        "index 1",
+        "index 2",
+        "index 3"
     };
 
     public ItemCard(int id) {
@@ -39,15 +44,31 @@ public class ItemCard extends Item {
     }
     
     @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        if (player.isSneaking() && !world.isRemote) {
+            NBTWrapper tags = new NBTWrapper(itemStack, TAG_NAME);
+            tags.setByte("id", (byte) 0);
+        }
+        return itemStack;
+    }
+    
+    @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean flag) {
         NBTWrapper tags = new NBTWrapper(itemStack, TAG_NAME);
         Byte id = tags.getByte("id");
-        if (id > ID_LIST.length) {
+        if (id >= ID_LIST.length) {
             id = 0;
         }
         list.add(ID_LIST[id]);
+        if (id != 0) {
+            int itemId = tags.getInt("itemId");
+            if (itemId != 0) {
+                String name = Item.itemsList[itemId].getUnlocalizedName();
+                list.add(StringTranslate.getInstance().translateNamedKey(name));
+            }
+        }
     }
     
 }

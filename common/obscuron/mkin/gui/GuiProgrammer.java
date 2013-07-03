@@ -6,10 +6,12 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import obscuron.mkin.container.ContainerProgrammer;
+import obscuron.mkin.item.ItemCard;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.GuiInfo;
 import obscuron.mkin.network.packet.PacketProgrammer;
 import obscuron.mkin.tileentity.TileProgrammer;
+import obscuron.mkin.util.NBTWrapper;
 
 import org.lwjgl.opengl.GL11;
 
@@ -59,13 +61,14 @@ public class GuiProgrammer extends GuiContainer {
         switch (button.id) {
             case ENCODE_ID:
                 ItemStack itemStack = tileProgrammer.getStackInSlot(0);
-                if (itemStack != null) {
-                    int size = 2 * itemStack.stackSize;
-                    if (size > itemStack.getItem().getItemStackLimit()) {
-                        size = itemStack.getItem().getItemStackLimit();
+                ItemStack card = tileProgrammer.getStackInSlot(1);
+                if (card != null && itemStack != null) {
+                    NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
+                    if (tags.getByte("id") == 0) {
+                        tags.setByte("id", (byte) 1);
+                        tags.setInt("itemId", itemStack.itemID);
+                        tileProgrammer.onInventoryChanged();
                     }
-                    itemStack.stackSize = size;
-                    tileProgrammer.onInventoryChanged();
                 }
                 PacketProgrammer packet = new PacketProgrammer();
                 packet.readInfo(tileProgrammer);
