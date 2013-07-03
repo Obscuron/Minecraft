@@ -42,22 +42,22 @@ public class ContainerProgrammer extends KineticContainer {
         Slot slot0 = (Slot) inventorySlots.get(0);
         Slot slot1 = (Slot) inventorySlots.get(1);
         if (!slot1.getHasStack() && slot1.isItemValid(itemStack)) {
-            ItemStack newItemStack = itemStack.copy();
-            newItemStack.stackSize = 1;
-            slot1.putStack(newItemStack);
-            slot1.onSlotChanged();
-            itemStack.stackSize -= 1;
+            copyToSlot(itemStack, slot1);
             return true;
         }
         else if (!slot0.getHasStack()) {
-            ItemStack newItemStack = itemStack.copy();
-            newItemStack.stackSize = 1;
-            slot0.putStack(newItemStack);
-            slot0.onSlotChanged();
-            itemStack.stackSize -= 1;
+            copyToSlot(itemStack, slot0);
             return true;
         }
         return false;
+    }
+    
+    private void copyToSlot(ItemStack itemStack, Slot slot) {
+        ItemStack newItemStack = itemStack.copy();
+        newItemStack.stackSize = 1;
+        slot.putStack(newItemStack);
+        slot.onSlotChanged();
+        itemStack.stackSize -= 1;
     }
 
 }

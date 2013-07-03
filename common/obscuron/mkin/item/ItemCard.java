@@ -13,6 +13,7 @@ public class ItemCard extends Item {
     public ItemCard(int id) {
         super(id);
         this.setMaxStackSize(1);
+        this.setNoRepair();
         this.setUnlocalizedName(ItemInfo.CARD_NAME);
         this.setCreativeTab(ModularKinetics.tabKinetics);
     }
