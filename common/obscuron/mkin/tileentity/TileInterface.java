@@ -10,6 +10,7 @@ public class TileInterface extends KineticInventoryTile {
         super();
     }
     
+    @Override
     protected int invSize() {
         return SIZE;
     }

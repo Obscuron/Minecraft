@@ -10,6 +10,7 @@ public class TileProgrammer extends KineticInventoryTile {
         super();
     }
     
+    @Override
     protected int invSize() {
         return SIZE;
     }
@@ -22,11 +23,6 @@ public class TileProgrammer extends KineticInventoryTile {
     @Override
     public int getInventoryStackLimit() {
         return 1;
-    }
-    
-    @Override
-    public void updateEntity() {
-        super.updateEntity();
     }
     
 }

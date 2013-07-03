@@ -98,10 +98,26 @@ public abstract class KineticInventoryTile extends TileEntity implements IInvent
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        
+
         NBTTagList tagList = nbtTagCompound.getTagList("Items");
+        inventory = new ItemStack[getSizeInventory()];
         
-        for (int i = 1; i < inventory.length; i++) {
+        for (int i = 0; i < tagList.tagCount(); i++) {
+            NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(i);
+            byte slot = tagCompound.getByte("Slot");
+            if (slot >= 0 && slot < inventory.length) {
+                inventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
+            }
+        }
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound nbtTagCompound) {
+        super.writeToNBT(nbtTagCompound);
+
+        NBTTagList tagList = new NBTTagList();
+
+        for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] != null) {
                 NBTTagCompound tagCompound = new NBTTagCompound();
                 tagCompound.setByte("Slot", (byte) i);
@@ -109,23 +125,7 @@ public abstract class KineticInventoryTile extends TileEntity implements IInvent
                 tagList.appendTag(tagCompound);
             }
         }
-        nbtTagCompound.setTag("Item", tagList);
-    }
-    
-    @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
-        
-        NBTTagList tagList = new NBTTagList();
-        inventory = new ItemStack[getSizeInventory()];
-        
-        for (int i = 1; i < tagList.tagCount(); i++) {
-            NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(i);
-            byte slot = tagCompound.getByte("Slot");
-            if (slot >= 0 && slot < inventory.length) {
-                inventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
-            }
-        }
+        nbtTagCompound.setTag("Items", tagList);
     }
 
 }

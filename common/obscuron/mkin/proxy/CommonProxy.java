@@ -35,7 +35,7 @@ public class CommonProxy implements IGuiHandler {
         return null;
     }
 
-    public void registerTileEntities() { 
+    public void registerTileEntities() {
         GameRegistry.registerTileEntity(TileProgrammer.class, TileInfo.PROGRAMMER_TILE);
         GameRegistry.registerTileEntity(TileInterface.class, TileInfo.INTERFACE_TILE);
     }
