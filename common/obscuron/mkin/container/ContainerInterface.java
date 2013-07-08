@@ -1,8 +1,10 @@
 package obscuron.mkin.container;
 
-import obscuron.mkin.tileentity.TileInterface;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import obscuron.mkin.container.slot.SlotInterface;
+import obscuron.mkin.tileentity.TileInterface;
 
 public class ContainerInterface extends KineticContainer {
 
@@ -18,7 +20,7 @@ public class ContainerInterface extends KineticContainer {
         // Chest slots
         for (int r = 0; r < INTERFACE_INVENTORY_ROWS; r++) {
             for (int c = 0; c < INTERFACE_INVENTORY_COLUMNS; c++) {
-                this.addSlotToContainer(new Slot(tile, c + r * INTERFACE_INVENTORY_COLUMNS, 62 + c * 18, 17 + r * 18));
+                this.addSlotToContainer(new SlotInterface(tile, c + r * INTERFACE_INVENTORY_COLUMNS, 62 + c * 18, 17 + r * 18));
             }
         }
         
@@ -39,6 +41,25 @@ public class ContainerInterface extends KineticContainer {
     @Override
     protected int containerSize() {
         return INTERFACE_INVENTORY_ROWS * INTERFACE_INVENTORY_COLUMNS;
+    }
+    
+    protected boolean mergeFromInv(ItemStack itemStack) {
+        for (int i = 0; i < containerSize(); i++) {
+            Slot slot = (Slot) inventorySlots.get(i);
+            if (!slot.getHasStack() && slot.isItemValid(itemStack)) {
+                copyToSlot(itemStack, slot);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void copyToSlot(ItemStack itemStack, Slot slot) {
+        ItemStack newItemStack = itemStack.copy();
+        newItemStack.stackSize = 1;
+        slot.putStack(newItemStack);
+        slot.onSlotChanged();
+        itemStack.stackSize -= 1;
     }
 
 }
