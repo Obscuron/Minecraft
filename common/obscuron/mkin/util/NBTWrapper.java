@@ -83,4 +83,20 @@ public class NBTWrapper {
         tag.setInteger(tagName, value);
     }
     
+    public ItemStack getItem(String tagName) {
+        if (!hasTag(tagName)) {
+            return null;
+        }
+        else {
+            NBTTagCompound itemInfo = tag.getCompoundTag(tagName);
+            return ItemStack.loadItemStackFromNBT(itemInfo);
+        }
+    }
+    
+    public void setItem(String tagName, ItemStack itemStack) {
+        NBTTagCompound itemInfo = new NBTTagCompound();
+        itemStack.writeToNBT(itemInfo);
+        tag.setCompoundTag(tagName, itemInfo);
+    }
+    
 }
