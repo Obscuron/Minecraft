@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StringTranslate;
 import net.minecraft.world.World;
 import obscuron.mkin.ModularKinetics;
 import obscuron.mkin.lib.ItemInfo;
@@ -20,9 +19,9 @@ public class ItemCard extends Item {
     public static final String TAG_NAME = ItemInfo.CARD_NAME;
     public static final String[] ID_LIST = {
         "Empty",
-        "index 1",
-        "index 2",
-        "index 3"
+        "Fuzzy",
+        "Normal",
+        "Exact"
     };
 
     public ItemCard(int id) {
@@ -56,17 +55,23 @@ public class ItemCard extends Item {
     @SideOnly(Side.CLIENT)
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean flag) {
-        NBTWrapper tags = new NBTWrapper(itemStack, TAG_NAME);
-        Byte id = tags.getByte("id");
+        NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+        Byte id = tag.getByte("id");
         if (id >= ID_LIST.length) {
             id = 0;
         }
         list.add(ID_LIST[id]);
-        if (id != 0) {
-            int itemId = tags.getInt("itemId");
-            if (itemId != 0) {
-                String name = Item.itemsList[itemId].getUnlocalizedName();
-                list.add(StringTranslate.getInstance().translateNamedKey(name));
+        if (id > 0) {
+            ItemStack itemInfo = tag.getItem("itemInfo");
+            if (itemInfo != null) {
+                if (id < 3) {
+                    itemInfo.stackTagCompound = null;
+                }
+                if (id < 2) {
+                    itemInfo.setItemDamage(0);
+                }
+                String name = itemInfo.getItem().getItemDisplayName(itemInfo);
+                list.add(name);
             }
         }
     }

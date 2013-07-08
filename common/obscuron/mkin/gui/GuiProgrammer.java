@@ -22,8 +22,17 @@ public class GuiProgrammer extends GuiContainer {
     private int xStart;
     private int yStart;
     
-    private final int ENCODE_ID = 0;
+    private final byte ENCODE_ID = 0;
     private GuiButton encodeButton;
+    
+    private final byte TYPE_ID = 1;
+    private GuiButton typeButton;
+    private byte typeState = 0;
+    private final String[] typeStrings = {
+            "Fuzzy",
+            "Normal",
+            "Exact"
+    };
     
     @SuppressWarnings("unchecked")
     @Override
@@ -33,7 +42,9 @@ public class GuiProgrammer extends GuiContainer {
         xStart = (width - xSize) / 2;
         yStart = (height - ySize) / 2;
         encodeButton = new GuiButton(ENCODE_ID, xStart + 8, yStart + 16, 60, 20, "Encode");
+        typeButton = new GuiButton(TYPE_ID, xStart + 8, yStart + 40, 60, 20, typeStrings[typeState]);
         this.buttonList.add(encodeButton);
+        this.buttonList.add(typeButton);
     }
 
     public GuiProgrammer(InventoryPlayer inventoryPlayer, TileProgrammer tile) {
@@ -65,14 +76,23 @@ public class GuiProgrammer extends GuiContainer {
                 if (card != null && itemStack != null) {
                     NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
                     if (tags.getByte("id") == 0) {
-                        tags.setByte("id", (byte) 1);
-                        tags.setInt("itemId", itemStack.itemID);
+                        tags.setByte("id", (byte) (typeState + 1));
+                        tags.setItem("itemInfo", itemStack);
                         tileProgrammer.onInventoryChanged();
                     }
                 }
                 PacketProgrammer packet = new PacketProgrammer();
-                packet.readInfo(tileProgrammer);
+                packet.readInfo(tileProgrammer, typeState);
                 packet.sendPacket();
+                break;
+            
+            case TYPE_ID:
+                typeState++;
+                if (typeState >= typeStrings.length) {
+                    typeState = 0;
+                }
+                typeButton.displayString = typeStrings[typeState];
+                break;
         }
         
     }

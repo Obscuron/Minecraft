@@ -25,6 +25,8 @@ public class PacketProgrammer extends KineticPacket {
     public int y;
     public int z;
     
+    public byte typeState;
+    
     @Override
     public void readInfo(DataInputStream inputStream) throws Exception {
         dimension = inputStream.readInt();
@@ -33,13 +35,17 @@ public class PacketProgrammer extends KineticPacket {
         y = inputStream.readInt();
         z = inputStream.readInt();
         
+        typeState = inputStream.readByte();
     }
     
-    public void readInfo(TileProgrammer tileProgrammer) {
+    public void readInfo(TileProgrammer tileProgrammer, byte typeState) {
         dimension = tileProgrammer.getWorldObj().provider.dimensionId;
+        
         x = tileProgrammer.xCoord;
         y = tileProgrammer.yCoord;
         z = tileProgrammer.zCoord;
+        
+        this.typeState = typeState;
     }
     
     @Override
@@ -53,8 +59,8 @@ public class PacketProgrammer extends KineticPacket {
             if (card != null && itemStack != null) {
                 NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
                 if (tags.getByte("id") == 0) {
-                    tags.setByte("id", (byte) 1);
-                    tags.setInt("itemId", itemStack.itemID);
+                    tags.setByte("id", (byte) (typeState + 1));
+                    tags.setItem("itemInfo", itemStack);
                     tileProgrammer.onInventoryChanged();
                 }
             }
@@ -72,6 +78,7 @@ public class PacketProgrammer extends KineticPacket {
             outputStream.writeInt(x);
             outputStream.writeInt(y);
             outputStream.writeInt(z);
+            outputStream.writeByte(typeState);
         }
         catch (Exception e) {
             e.printStackTrace();
