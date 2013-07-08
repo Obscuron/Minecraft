@@ -50,9 +50,11 @@ public class ItemCard extends Item {
     
     @Override
     public Icon getIcon(ItemStack itemStack, int pass) {
-        NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
-        if (tag.getByte("id") > 0) {
-            return itemIconEncoded;
+        if (pass == 1) {
+            NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+            if (tag.getByte("id") > 0) {
+                return itemIconEncoded;
+            }
         }
         return itemIcon;
     }
