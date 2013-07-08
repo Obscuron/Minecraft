@@ -11,14 +11,15 @@ import net.minecraft.world.World;
 import obscuron.mkin.ModularKinetics;
 import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.lib.Reference;
+import obscuron.mkin.util.KeyUtil;
 import obscuron.mkin.util.NBTWrapper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCard extends Item {
-    
+
     private Icon itemIconEncoded;
-    
+
     public static final String TAG_NAME = ItemInfo.CARD_NAME;
     public static final String[] ID_LIST = {
         "Empty",
@@ -34,20 +35,20 @@ public class ItemCard extends Item {
         this.setUnlocalizedName(ItemInfo.CARD_NAME);
         this.setCreativeTab(ModularKinetics.tabKinetics);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
         itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName2());
         itemIconEncoded = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName2() + "Encoded");
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public boolean requiresMultipleRenderPasses() {
         return true;
     }
-    
+
     @Override
     public Icon getIcon(ItemStack itemStack, int pass) {
         if (pass == 1) {
@@ -58,11 +59,11 @@ public class ItemCard extends Item {
         }
         return itemIcon;
     }
-    
+
     public String getUnlocalizedName2() {
         return this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1);
     }
-    
+
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.isSneaking() && !world.isRemote) {
@@ -71,7 +72,7 @@ public class ItemCard extends Item {
         }
         return itemStack;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -81,20 +82,28 @@ public class ItemCard extends Item {
         if (id >= ID_LIST.length) {
             id = 0;
         }
-        list.add(ID_LIST[id]);
-        if (id > 0) {
-            ItemStack itemInfo = tag.getItem("itemInfo");
-            if (itemInfo != null) {
-                if (id < 3) {
-                    itemInfo.stackTagCompound = null;
+        if (id == 0) {
+            list.add(ID_LIST[id]);
+        }
+        else {
+            if (KeyUtil.isShiftHeld()) {
+                list.add(ID_LIST[id]);
+                ItemStack itemInfo = tag.getItem("itemInfo");
+                if (itemInfo != null) {
+                    if (id < 3) {
+                        itemInfo.stackTagCompound = null;
+                    }
+                    if (id < 2) {
+                        itemInfo.setItemDamage(0);
+                    }
+                    String name = itemInfo.getItem().getItemDisplayName(itemInfo);
+                    list.add(name);
                 }
-                if (id < 2) {
-                    itemInfo.setItemDamage(0);
-                }
-                String name = itemInfo.getItem().getItemDisplayName(itemInfo);
-                list.add(name);
+            }
+            else {
+                list.add("Hold Shift for more Info");
             }
         }
     }
-    
+
 }
