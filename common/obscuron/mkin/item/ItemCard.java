@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import obscuron.mkin.ModularKinetics;
 import obscuron.mkin.lib.ItemInfo;
@@ -15,6 +16,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemCard extends Item {
+    
+    private Icon itemIconEncoded;
     
     public static final String TAG_NAME = ItemInfo.CARD_NAME;
     public static final String[] ID_LIST = {
@@ -36,6 +39,22 @@ public class ItemCard extends Item {
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister iconRegister) {
         itemIcon = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName2());
+        itemIconEncoded = iconRegister.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + this.getUnlocalizedName2() + "Encoded");
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
+    
+    @Override
+    public Icon getIcon(ItemStack itemStack, int pass) {
+        NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+        if (tag.getByte("id") > 0) {
+            return itemIconEncoded;
+        }
+        return itemIcon;
     }
     
     public String getUnlocalizedName2() {
@@ -45,8 +64,8 @@ public class ItemCard extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.isSneaking() && !world.isRemote) {
-            NBTWrapper tags = new NBTWrapper(itemStack, TAG_NAME);
-            tags.setByte("id", (byte) 0);
+            NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+            tag.setByte("id", (byte) 0);
         }
         return itemStack;
     }
