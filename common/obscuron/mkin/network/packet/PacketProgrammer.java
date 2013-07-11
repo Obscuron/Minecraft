@@ -58,11 +58,9 @@ public class PacketProgrammer extends KineticPacket {
             ItemStack card = tileProgrammer.getStackInSlot(1);
             if (card != null && itemStack != null) {
                 NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
-                if (tags.getByte("id") == 0) {
-                    tags.setByte("id", (byte) (typeState + 1));
-                    tags.setItem("itemInfo", itemStack);
-                    tileProgrammer.onInventoryChanged();
-                }
+                tags.setByte("id", (byte) (typeState + 1));
+                tags.setItem("itemInfo", itemStack);
+                tileProgrammer.onInventoryChanged();
             }
         }
     }

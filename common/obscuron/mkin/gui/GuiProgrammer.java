@@ -89,17 +89,15 @@ public class GuiProgrammer extends GuiContainer {
         ItemStack itemStack = tileProgrammer.getStackInSlot(0);
         ItemStack card = tileProgrammer.getStackInSlot(1);
         
-        if (!itemStack.getItem().equals(ItemsHandler.kineticCard)) {
+        if (!card.getItem().equals(ItemsHandler.kineticCard)) {
             return;
         }
         
         if (card != null && itemStack != null) {
             NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
-            if (tags.getByte("id") == 0) {
-                tags.setByte("id", (byte) (typeState + 1));
-                tags.setItem("itemInfo", itemStack);
-                tileProgrammer.onInventoryChanged();
-            }
+            tags.setByte("id", (byte) (typeState + 1));
+            tags.setItem("itemInfo", itemStack);
+            tileProgrammer.onInventoryChanged();
         }
         
         PacketProgrammer packet = new PacketProgrammer();
