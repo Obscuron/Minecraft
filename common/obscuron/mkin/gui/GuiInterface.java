@@ -17,18 +17,18 @@ public class GuiInterface extends GuiContainer {
     private int xStart;
     private int yStart;
     
-    @Override
-    public void initGui() {
-        super.initGui();
-        xStart = (width - xSize) / 2;
-        yStart = (height - ySize) / 2;
-    }
-
     public GuiInterface(InventoryPlayer inventoryPlayer, TileInterface tile) {
         super(new ContainerInterface(inventoryPlayer, tile));
         tileInterface = tile;
         xSize = 176;
         ySize = 166;
+    }
+    
+    @Override
+    public void initGui() {
+        super.initGui();
+        xStart = (width - xSize) / 2;
+        yStart = (height - ySize) / 2;
     }
     
     @Override

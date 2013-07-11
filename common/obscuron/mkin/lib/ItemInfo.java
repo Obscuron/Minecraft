@@ -6,7 +6,7 @@ public class ItemInfo {
     public static int CARD_ID;
     
     /* Default Item Ids */
-    public static final int DEFAULT_CARD_ID = 5000;
+    public static final int DEFAULT_CARD_ID = 5500;
     
     /* Unlocalized Names */
     public static final String CARD_NAME = "kineticCard";
