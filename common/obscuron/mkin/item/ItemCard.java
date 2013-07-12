@@ -27,6 +27,15 @@ public class ItemCard extends Item {
         "Normal",
         "Exact"
     };
+    
+    public static final String[] SIDE_LIST = {
+        "Top",
+        "Bottom",
+        "East",
+        "South",
+        "West",
+        "North"
+    };
 
     public ItemCard(int id) {
         super(id);
@@ -99,6 +108,8 @@ public class ItemCard extends Item {
                     String name = itemInfo.getItem().getItemDisplayName(itemInfo);
                     list.add(name);
                 }
+                byte side = tag.getByte("side");
+                list.add(SIDE_LIST[side]);
             }
             else {
                 list.add("Hold Shift for more Info");

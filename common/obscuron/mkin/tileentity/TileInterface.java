@@ -24,5 +24,10 @@ public class TileInterface extends KineticInventoryTile {
     public int getInventoryStackLimit() {
         return 1;
     }
+    
+    @Override
+    public void updateEntity() {
+        
+    }
 
 }
