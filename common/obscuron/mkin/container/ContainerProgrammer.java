@@ -15,19 +15,19 @@ public class ContainerProgrammer extends KineticContainer {
         super(tile);
         
         // Chest slots
-        this.addSlotToContainer(new Slot(tile, 0, 138, 17));
-        this.addSlotToContainer(new SlotProgrammer(tile, 1, 138, 49));
+        this.addSlotToContainer(new Slot(tile, 0, 126, 17));
+        this.addSlotToContainer(new SlotProgrammer(tile, 1, 126, 65));
         
         // Player inventory slots
         for (int r = 0; r < PLAYER_INVENTORY_ROWS; r++) {
             for (int c = 0; c < PLAYER_INVENTORY_COLUMNS; c++) {
-                this.addSlotToContainer(new Slot(inventoryPlayer, c + r * PLAYER_INVENTORY_COLUMNS + 9, 8 + c * 18, 84 + r * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, c + r * PLAYER_INVENTORY_COLUMNS + 9, 8 + c * 18, 99 + r * 18));
             }
         }
         
         // Player action bar slots
         for (int c = 0; c < PLAYER_INVENTORY_COLUMNS; c++) {
-            this.addSlotToContainer(new Slot(inventoryPlayer, c, 8 + c * 18, 142));
+            this.addSlotToContainer(new Slot(inventoryPlayer, c, 8 + c * 18, 157));
         }
         
     }

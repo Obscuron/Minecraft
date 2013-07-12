@@ -36,6 +36,14 @@ public class ItemCard extends Item {
         "West",
         "North"
     };
+    
+    public static final String[] COUNT_LIST = {
+        "= ",
+        ">= ",
+        "> ",
+        "< ",
+        "<= ",
+    };
 
     public ItemCard(int id) {
         super(id);
@@ -108,8 +116,8 @@ public class ItemCard extends Item {
                     String name = itemInfo.getItem().getItemDisplayName(itemInfo);
                     list.add(name);
                 }
-                byte side = tag.getByte("side");
-                list.add(SIDE_LIST[side]);
+                list.add(SIDE_LIST[tag.getByte("side")]);
+                list.add(COUNT_LIST[tag.getByte("countState")] + tag.getInt("count"));
             }
             else {
                 list.add("Hold Shift for more Info");

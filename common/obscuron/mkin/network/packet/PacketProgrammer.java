@@ -25,8 +25,11 @@ public class PacketProgrammer extends KineticPacket {
     public int y;
     public int z;
     
-    public byte type;
-    public byte side;
+    public byte typeState;
+    public byte sideState;
+    public byte countState;
+    
+    public int count;
     
     @Override
     public void readInfo(DataInputStream inputStream) throws Exception {
@@ -36,19 +39,23 @@ public class PacketProgrammer extends KineticPacket {
         y = inputStream.readInt();
         z = inputStream.readInt();
         
-        type = inputStream.readByte();
-        side = inputStream.readByte();
+        typeState = inputStream.readByte();
+        sideState = inputStream.readByte();
+        countState = inputStream.readByte();
+        count = inputStream.readInt();
     }
     
-    public void readInfo(TileProgrammer tileProgrammer, byte typeState, byte sideState) {
+    public void readInfo(TileProgrammer tileProgrammer, byte typeState, byte sideState, byte countState, int count) {
         dimension = tileProgrammer.getWorldObj().provider.dimensionId;
         
         x = tileProgrammer.xCoord;
         y = tileProgrammer.yCoord;
         z = tileProgrammer.zCoord;
         
-        type = typeState;
-        side = sideState;
+        this.typeState = typeState;
+        this.sideState = sideState;
+        this.countState = countState;
+        this.count = count;
     }
     
     @Override
@@ -61,8 +68,10 @@ public class PacketProgrammer extends KineticPacket {
             ItemStack card = tileProgrammer.getStackInSlot(1);
             if (card != null && itemStack != null) {
                 NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
-                tags.setByte("id", (byte) (type + 1));
-                tags.setByte("side", side);
+                tags.setByte("id", (byte) (typeState + 1));
+                tags.setByte("side", sideState);
+                tags.setByte("countState", countState);
+                tags.setInt("count", count);
                 tags.setItem("itemInfo", itemStack);
                 tileProgrammer.onInventoryChanged();
             }
@@ -80,8 +89,10 @@ public class PacketProgrammer extends KineticPacket {
             outputStream.writeInt(x);
             outputStream.writeInt(y);
             outputStream.writeInt(z);
-            outputStream.writeByte(type);
-            outputStream.writeByte(side);
+            outputStream.writeByte(typeState);
+            outputStream.writeByte(sideState);
+            outputStream.writeByte(countState);
+            outputStream.writeInt(count);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -13,6 +13,7 @@ import obscuron.mkin.lib.GuiInfo;
 import obscuron.mkin.network.packet.PacketProgrammer;
 import obscuron.mkin.tileentity.TileProgrammer;
 import obscuron.mkin.util.ColorUtil;
+import obscuron.mkin.util.KeyUtil;
 import obscuron.mkin.util.NBTWrapper;
 
 import org.lwjgl.opengl.GL11;
@@ -47,12 +48,30 @@ public class GuiProgrammer extends GuiContainer {
             ColorUtil.GREEN + "West",
             ColorUtil.RED + "North"
     };
+    
+    private final byte COUNT_ID = 3;
+    private GuiButton countButton;
+    private byte countState;
+    private final String[] countStrings = {
+            "=",
+            ">=",
+            ">",
+            "<",
+            "<="
+    };
+    private final int COUNT_MAX = 4096;
+    private int count;
+    
+    private GuiButton incButton;
+    private GuiButton decButton;
+    private GuiButton incFastButton;
+    private GuiButton decFastButton;
 
     public GuiProgrammer(InventoryPlayer inventoryPlayer, TileProgrammer tile) {
         super(new ContainerProgrammer(inventoryPlayer, tile));
         tileProgrammer = tile;
         xSize = 176;
-        ySize = 166;
+        ySize = 181;
     }
 
     @Override
@@ -66,18 +85,31 @@ public class GuiProgrammer extends GuiContainer {
 
     @SuppressWarnings("unchecked")
     private void initButtons() {
-        encodeButton = new GuiButton(ENCODE_ID, xStart + 8, yStart + 16, 60, 20, "Encode");
-        typeButton = new GuiButton(TYPE_ID, xStart + 8, yStart + 40, 60, 20, typeStrings[typeState]);
-        sideButton = new GuiButton(SIDE_ID, xStart + 72, yStart + 16, 60, 20, sideStrings[typeState]);
+        encodeButton = new GuiButton(ENCODE_ID, xStart + 8, yStart + 64, 60, 20, "Encode");
+        typeButton = new GuiButton(TYPE_ID, xStart + 8, yStart + 16, 60, 20, typeStrings[typeState]);
+        sideButton = new GuiButton(SIDE_ID, xStart + 8, yStart + 40, 60, 20, sideStrings[sideState]);
+        countButton = new GuiButton(COUNT_ID, xStart + 124, yStart + 35, 20, 20, countStrings[countState]);
+        incButton = new GuiButton(COUNT_ID + 1, xStart + 148, yStart + 27, 20, 20, "+");
+        decButton = new GuiButton(COUNT_ID + 2, xStart + 100, yStart + 27, 20, 20, "-");
+        incFastButton = new GuiButton(COUNT_ID + 3, xStart + 148, yStart + 49, 20, 20, "++");
+        decFastButton = new GuiButton(COUNT_ID + 4, xStart + 100, yStart + 49, 20, 20, "--");
+        
         this.buttonList.add(encodeButton);
         this.buttonList.add(typeButton);
         this.buttonList.add(sideButton);
+        this.buttonList.add(countButton);
+        this.buttonList.add(incButton);
+        this.buttonList.add(decButton);
+        this.buttonList.add(incFastButton);
+        this.buttonList.add(decFastButton);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         fontRenderer.drawString(StatCollector.translateToLocal(tileProgrammer.getInvName()), 8, 6, 0x404040);
         fontRenderer.drawString(StatCollector.translateToLocal(ContainerInfo.CONTAINER_INVENTORY), 8, ySize - 96 + 2, 0x404040);
+        int width = fontRenderer.getStringWidth(Integer.toString(count));
+        fontRenderer.drawString(Integer.toString(count), 134 - width/2, 56, 0x000000);
     }
 
     @Override
@@ -99,6 +131,11 @@ public class GuiProgrammer extends GuiContainer {
             case SIDE_ID:
                 sideAction();
                 break;
+            case COUNT_ID:
+                countAction();
+                break;
+            default:
+                changeCount(button.id - 4, KeyUtil.isShiftHeld());
         }
     }
 
@@ -113,12 +150,14 @@ public class GuiProgrammer extends GuiContainer {
             NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
             tags.setByte("id", (byte) (typeState + 1));
             tags.setByte("side", sideState);
+            tags.setByte("countState", countState);
+            tags.setInt("count", count);
             tags.setItem("itemInfo", itemStack);
             tileProgrammer.onInventoryChanged();
         }
         
         PacketProgrammer packet = new PacketProgrammer();
-        packet.readInfo(tileProgrammer, typeState, sideState);
+        packet.readInfo(tileProgrammer, typeState, sideState, countState, count);
         packet.sendPacket();
     }
 
@@ -137,5 +176,32 @@ public class GuiProgrammer extends GuiContainer {
         }
         sideButton.displayString = sideStrings[sideState];
     }
+    
+    private void countAction() {
+        countState++;
+        if (countState >= countStrings.length) {
+            countState = 0;
+        }
+        countButton.displayString = countStrings[countState];
+    }
 
+    private void changeCount(int id, boolean shiftHeld) {
+        if (id < 0 || id > 3) {
+            return;
+        }
+        int[] amount = {1, -1, 64, -64};
+        if (shiftHeld) {
+            count += amount[id] * 8;
+        }
+        else {
+            count += amount[id];
+        }
+        if (count < 0) {
+            count = 0;
+        }
+        if (count > COUNT_MAX) {
+            count = COUNT_MAX;
+        }
+    }
+    
 }
