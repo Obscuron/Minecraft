@@ -31,10 +31,10 @@ public class ItemCard extends Item {
     public static final String[] SIDE_LIST = {
         "Top",
         "Bottom",
-        "East",
+        "North",
         "South",
-        "West",
-        "North"
+        "East",
+        "West"
     };
     
     public static final String[] COUNT_LIST = {

@@ -43,10 +43,10 @@ public class GuiProgrammer extends GuiContainer {
     private final String[] sideStrings = {
             ColorUtil.BLUE + "Top",
             ColorUtil.GOLD + "Bottom",
-            ColorUtil.PURPLE + "East",
+            ColorUtil.RED + "North",
             ColorUtil.YELLOW + "South",
-            ColorUtil.GREEN + "West",
-            ColorUtil.RED + "North"
+            ColorUtil.PURPLE + "East",
+            ColorUtil.GREEN + "West"
     };
     
     private final byte COUNT_ID = 3;
