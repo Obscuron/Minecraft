@@ -13,7 +13,7 @@ public class SlotProgrammer extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack itemStack) {
-        return itemStack.getItem().equals(ItemsHandler.kineticCard);
+        return ItemsHandler.validCard(itemStack);
     }
 
 

@@ -1,11 +1,9 @@
 package obscuron.mkin.container.slot;
 
-import obscuron.mkin.core.ItemsHandler;
-import obscuron.mkin.item.ItemCard;
-import obscuron.mkin.util.NBTWrapper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import obscuron.mkin.core.ItemsHandler;
 
 public class SlotInterface extends Slot {
     
@@ -15,12 +13,6 @@ public class SlotInterface extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack itemStack) {
-        if (itemStack.getItem().equals(ItemsHandler.kineticCard)) {
-            NBTWrapper tag = new NBTWrapper(itemStack, ItemCard.TAG_NAME);
-            if (tag.getByte("id") > 0) {
-                return true;
-            }
-        }
-        return false;
+        return ItemsHandler.validEncodedCard(itemStack);
     }
 }

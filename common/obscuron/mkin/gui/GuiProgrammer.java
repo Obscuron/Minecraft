@@ -144,7 +144,7 @@ public class GuiProgrammer extends GuiContainer {
         ItemStack card = tileProgrammer.getStackInSlot(1);
         
         if (card != null && itemStack != null) {
-            if (!card.getItem().equals(ItemsHandler.kineticCard)) {
+            if (!ItemsHandler.validCard(card)) {
                 return;
             }
             NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
