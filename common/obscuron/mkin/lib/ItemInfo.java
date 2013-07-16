@@ -13,5 +13,8 @@ public class ItemInfo {
     
     /* Localized Names */
     public static final String CARD_FULLNAME = "Interface Card";
+    
+    /* Tag Names */
+    public static final String CARD_TAG = CARD_NAME;
 
 }

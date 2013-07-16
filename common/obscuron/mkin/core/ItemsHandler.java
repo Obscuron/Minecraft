@@ -23,7 +23,7 @@ public class ItemsHandler {
     
     public static boolean validEncodedCard(ItemStack card) {
         if (validCard(card)) {
-            NBTWrapper tag = new NBTWrapper(card, ItemCard.TAG_NAME);
+            NBTWrapper tag = new NBTWrapper(card, ItemInfo.CARD_TAG);
             if (tag.getByte("id") > 0) {
                 return true;
             }

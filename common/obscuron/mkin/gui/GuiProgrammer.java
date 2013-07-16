@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import obscuron.mkin.container.ContainerProgrammer;
 import obscuron.mkin.core.ItemsHandler;
-import obscuron.mkin.item.ItemCard;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.GuiInfo;
+import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.network.packet.PacketProgrammer;
 import obscuron.mkin.tileentity.TileProgrammer;
 import obscuron.mkin.util.ColorUtil;
@@ -147,7 +147,7 @@ public class GuiProgrammer extends GuiContainer {
             if (!ItemsHandler.validCard(card)) {
                 return;
             }
-            NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
+            NBTWrapper tags = new NBTWrapper(card, ItemInfo.CARD_TAG);
             tags.setByte("id", (byte) (typeState + 1));
             tags.setByte("side", sideState);
             tags.setByte("countState", countState);

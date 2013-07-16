@@ -9,7 +9,7 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import obscuron.mkin.item.ItemCard;
+import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.lib.Reference;
 import obscuron.mkin.tileentity.TileProgrammer;
 import obscuron.mkin.util.NBTWrapper;
@@ -67,7 +67,7 @@ public class PacketProgrammer extends KineticPacket {
             ItemStack itemStack = tileProgrammer.getStackInSlot(0);
             ItemStack card = tileProgrammer.getStackInSlot(1);
             if (card != null && itemStack != null) {
-                NBTWrapper tags = new NBTWrapper(card, ItemCard.TAG_NAME);
+                NBTWrapper tags = new NBTWrapper(card, ItemInfo.CARD_TAG);
                 tags.setByte("id", (byte) (typeState + 1));
                 tags.setByte("side", sideState);
                 tags.setByte("countState", countState);

@@ -20,7 +20,6 @@ public class ItemCard extends Item {
 
     private Icon itemIconEncoded;
 
-    public static final String TAG_NAME = ItemInfo.CARD_NAME;
     public static final String[] ID_LIST = {
         "Empty",
         "Fuzzy",
@@ -69,7 +68,7 @@ public class ItemCard extends Item {
     @Override
     public Icon getIcon(ItemStack itemStack, int pass) {
         if (pass == 1) {
-            NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+            NBTWrapper tag = new NBTWrapper(itemStack, ItemInfo.CARD_TAG);
             if (tag.getByte("id") > 0) {
                 return itemIconEncoded;
             }
@@ -84,7 +83,7 @@ public class ItemCard extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.isSneaking() && !world.isRemote) {
-            NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+            NBTWrapper tag = new NBTWrapper(itemStack, ItemInfo.CARD_TAG);
             tag.setByte("id", (byte) 0);
         }
         return itemStack;
@@ -94,7 +93,7 @@ public class ItemCard extends Item {
     @SideOnly(Side.CLIENT)
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean flag) {
-        NBTWrapper tag = new NBTWrapper(itemStack, TAG_NAME);
+        NBTWrapper tag = new NBTWrapper(itemStack, ItemInfo.CARD_TAG);
         Byte id = tag.getByte("id");
         if (id >= ID_LIST.length) {
             id = 0;
