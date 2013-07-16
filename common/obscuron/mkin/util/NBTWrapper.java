@@ -5,24 +5,33 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class NBTWrapper {
     
-    private ItemStack itemStack;
     private String compoundTag;
     private NBTTagCompound tag;
     
     public NBTWrapper(ItemStack itemStack, String tagName) {
-        this.itemStack = itemStack;
         this.compoundTag = tagName;
-        this.initTag();
+        this.init(itemStack);
     }
     
-    private void initTag() {
+    public NBTWrapper(NBTTagCompound tag, String tagName) {
+        this.compoundTag = tagName;
+        initTag(tag);
+    }
+    
+    private void init(ItemStack itemStack) {
         if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        if (!itemStack.getTagCompound().hasKey(compoundTag)) {
-            itemStack.getTagCompound().setCompoundTag(compoundTag, new NBTTagCompound());
+        
+        initTag(itemStack.getTagCompound());
+    }
+    
+    public void initTag(NBTTagCompound nbtTagCompound) {
+        if (!nbtTagCompound.hasKey(compoundTag)) {
+            nbtTagCompound.setCompoundTag(compoundTag, new NBTTagCompound());
         }
-        tag = itemStack.getTagCompound().getCompoundTag(compoundTag);
+        
+        tag = nbtTagCompound.getCompoundTag(compoundTag);
     }
     
     public boolean hasTag(String tagName) {
