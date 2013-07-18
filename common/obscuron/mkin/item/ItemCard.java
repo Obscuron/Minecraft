@@ -24,7 +24,8 @@ public class ItemCard extends Item {
         "Empty",
         "Fuzzy",
         "Normal",
-        "Exact"
+        "Exact",
+        "Any Item"
     };
     
     public static final String[] SIDE_LIST = {
@@ -104,16 +105,18 @@ public class ItemCard extends Item {
         else {
             if (KeyUtil.isShiftHeld()) {
                 list.add(ID_LIST[id]);
-                ItemStack itemInfo = tag.getItem("itemInfo");
-                if (itemInfo != null) {
-                    if (id < 3) {
-                        itemInfo.stackTagCompound = null;
+                if (id != 4) {
+                    ItemStack itemInfo = tag.getItem("itemInfo");
+                    if (itemInfo != null) {
+                        if (id < 3) {
+                            itemInfo.stackTagCompound = null;
+                        }
+                        if (id < 2) {
+                            itemInfo.setItemDamage(0);
+                        }
+                        String name = itemInfo.getItem().getItemDisplayName(itemInfo);
+                        list.add(name);
                     }
-                    if (id < 2) {
-                        itemInfo.setItemDamage(0);
-                    }
-                    String name = itemInfo.getItem().getItemDisplayName(itemInfo);
-                    list.add(name);
                 }
                 list.add(SIDE_LIST[tag.getByte("side")]);
                 list.add(COUNT_LIST[tag.getByte("countState")] + tag.getInt("count"));

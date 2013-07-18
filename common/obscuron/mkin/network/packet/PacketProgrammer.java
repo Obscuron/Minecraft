@@ -66,13 +66,15 @@ public class PacketProgrammer extends KineticPacket {
             TileProgrammer tileProgrammer = (TileProgrammer) tile;
             ItemStack itemStack = tileProgrammer.getStackInSlot(0);
             ItemStack card = tileProgrammer.getStackInSlot(1);
-            if (card != null && itemStack != null) {
+            if (card != null && (itemStack != null || typeState == 3)) {
                 NBTWrapper tags = new NBTWrapper(card, ItemInfo.CARD_TAG);
                 tags.setByte("id", (byte) (typeState + 1));
                 tags.setByte("side", sideState);
                 tags.setByte("countState", countState);
                 tags.setInt("count", count);
-                tags.setItem("itemInfo", itemStack);
+                if (typeState != 3) {
+                    tags.setItem("itemInfo", itemStack);
+                }
                 tileProgrammer.onInventoryChanged();
             }
         }

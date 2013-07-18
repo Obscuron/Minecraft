@@ -34,7 +34,8 @@ public class GuiProgrammer extends GuiContainer {
     private final String[] typeStrings = {
             "Fuzzy",
             "Normal",
-            "Exact"
+            "Exact",
+            "Any Item"
     };
     
     private final byte SIDE_ID = 2;
@@ -143,7 +144,7 @@ public class GuiProgrammer extends GuiContainer {
         ItemStack itemStack = tileProgrammer.getStackInSlot(0);
         ItemStack card = tileProgrammer.getStackInSlot(1);
         
-        if (card != null && itemStack != null) {
+        if (card != null && (itemStack != null || typeState == 3)) {
             if (!ItemsHandler.validCard(card)) {
                 return;
             }
@@ -152,7 +153,9 @@ public class GuiProgrammer extends GuiContainer {
             tags.setByte("side", sideState);
             tags.setByte("countState", countState);
             tags.setInt("count", count);
-            tags.setItem("itemInfo", itemStack);
+            if (typeState != 3) {
+                tags.setItem("itemInfo", itemStack);
+            }
             tileProgrammer.onInventoryChanged();
         }
         
