@@ -2,6 +2,7 @@ package obscuron.mkin.tileentity;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import obscuron.mkin.core.ItemsHandler;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.ItemInfo;
 import obscuron.mkin.util.InvUtil;
@@ -11,8 +12,6 @@ import obscuron.mkin.util.TagInfoHandler;
 public class TileInterface extends KineticInventoryTile {
 
     public static final int SIZE = 3*3;
-
-    private byte slotNum;
 
     public TileInterface() {
         super();
@@ -41,7 +40,7 @@ public class TileInterface extends KineticInventoryTile {
             TagInfoHandler[] tagInfo = new TagInfoHandler[invSize()];
             
             for (int i = 0; i < invSize(); i++) {
-                ItemStack card = getStackInSlot(slotNum);
+                ItemStack card = getStackInSlot(i);
                 if (card == null) {
                     continue;
                 }
@@ -52,6 +51,22 @@ public class TileInterface extends KineticInventoryTile {
                 
                 tagInfo[i] = new TagInfoHandler(tag);
                 parseInv(tagInfo[i], sides[tag.getByte("side")]);
+            }
+            
+            for (int i = 0; i < tagInfo.length; i++) {
+                if (tagInfo[i] != null) {
+                    if (tagInfo[i].isSatisfied()) {
+                        continue;
+                    }
+                    for (int j = 0; j < tagInfo.length; j++) {
+                        if (i == j) {
+                            continue;
+                        }
+                        if (compare(tagInfo[i].itemStack, tagInfo[j].tag)) {
+                            
+                        }
+                    }
+                }
             }
         }
     }
@@ -85,6 +100,11 @@ public class TileInterface extends KineticInventoryTile {
         }
         
         return true;
+    }
+    
+    @Override
+    public boolean isStackValidForSlot(int slot, ItemStack itemStack) {
+        return ItemsHandler.validEncodedCard(itemStack);
     }
 
 }
