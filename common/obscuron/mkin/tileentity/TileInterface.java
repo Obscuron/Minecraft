@@ -2,12 +2,11 @@ package obscuron.mkin.tileentity;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import obscuron.mkin.lib.ContainerInfo;
 import obscuron.mkin.lib.ItemInfo;
-import obscuron.mkin.lib.TileInfo;
 import obscuron.mkin.util.InvUtil;
 import obscuron.mkin.util.NBTWrapper;
+import obscuron.mkin.util.TagInfoHandler;
 
 public class TileInterface extends KineticInventoryTile {
 
@@ -38,57 +37,42 @@ public class TileInterface extends KineticInventoryTile {
     public void updateEntity() {
         super.updateEntity();
         if (!worldObj.isRemote) {
-            if (nextCard()) {
+            IInventory[] sides = InvUtil.getAdjacentInventories(worldObj, xCoord, yCoord, zCoord);
+            TagInfoHandler[] tagInfo = new TagInfoHandler[invSize()];
+            
+            for (int i = 0; i < invSize(); i++) {
                 ItemStack card = getStackInSlot(slotNum);
+                if (card == null) {
+                    continue;
+                }
                 NBTWrapper tag = new NBTWrapper(card, ItemInfo.CARD_TAG);
-                IInventory[] sides = InvUtil.getAdjacentInventories(worldObj, xCoord, yCoord, zCoord);
                 if (sides[tag.getByte("side")] == null) {
-                    return;
+                    continue;
                 }
-                int count = countNum(tag, sides[tag.getByte("side")]);
-                if (count != tag.getInt("count")) {
-                    for (int i = 0; i < sides.length; i++) {
-                        if (sides[i] != null) {
-
-                        }
-                    }
-                }
+                
+                tagInfo[i] = new TagInfoHandler(tag);
+                parseInv(tagInfo[i], sides[tag.getByte("side")]);
             }
         }
-    }
-
-    private boolean nextCard() {
-        byte newSlot = (byte) ((slotNum + 1) % invSize());
-        while (getStackInSlot(newSlot) == null) {
-            if (newSlot == slotNum) {
-                slotNum = 0;
-                return false;
-            }
-            newSlot++;
-            if (newSlot >= invSize()) {
-                newSlot = 0;
-            }
-        }
-        slotNum = newSlot;
-        return true;
     }
     
-    private int countNum(NBTWrapper tag, IInventory inv) {
-        int count = 0;
+    private void parseInv(TagInfoHandler tagInfo, IInventory inv) {
         for (int i = 0; i < inv.getSizeInventory(); i++) {
             ItemStack item = inv.getStackInSlot(i);
-            if (compare(item, tag)) {
-                count += item.stackSize;
+            if (compare(item, tagInfo.tag)) {
+                tagInfo.slotNum.add(i);
+                tagInfo.count += item.stackSize;
             }
         }
-        
-        return count;
     }
     
     private boolean compare(ItemStack item, NBTWrapper tag) {
         ItemStack cardItem = tag.getItem("itemInfo");
         if (item == null) {
             return false;
+        }
+        if (tag.getByte("id") == 4) {
+            return true;
         }
         if (item.itemID != cardItem.itemID) {
             return false;
@@ -101,24 +85,6 @@ public class TileInterface extends KineticInventoryTile {
         }
         
         return true;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-        super.readFromNBT(nbtTagCompound);
-
-        NBTWrapper tag = new NBTWrapper(nbtTagCompound, TileInfo.INTERFACE_TAG);
-
-        slotNum = tag.getByte("slotNum");
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-        super.writeToNBT(nbtTagCompound);
-
-        NBTWrapper tag = new NBTWrapper(nbtTagCompound, TileInfo.INTERFACE_TAG);
-
-        tag.setByte("slotNum", slotNum);
     }
 
 }
