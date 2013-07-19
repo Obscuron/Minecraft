@@ -70,6 +70,9 @@ public class PacketProgrammer extends KineticPacket {
                 NBTWrapper tags = new NBTWrapper(card, ItemInfo.CARD_TAG);
                 tags.setByte("id", (byte) (typeState + 1));
                 tags.setByte("side", sideState);
+                if (countState == 3 && count == 0) {
+                    countState = 4;
+                }
                 tags.setByte("countState", countState);
                 tags.setInt("count", count);
                 if (typeState != 3) {

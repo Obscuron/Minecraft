@@ -1,7 +1,10 @@
 package obscuron.mkin.util;
 
+import com.google.common.base.Objects;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
@@ -44,6 +47,15 @@ public class InvUtil {
             }
         }
         return chest;
+    }
+    
+    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2) {
+        if(stack1 == null || stack2 == null) {
+            return stack1 == stack2;
+        }
+        return stack1.itemID == stack2.itemID
+                && stack1.getItemDamage() == stack2.getItemDamage()
+                && Objects.equal(stack1.getTagCompound(), stack2.getTagCompound());
     }
 
 }

@@ -7,24 +7,29 @@ import net.minecraft.item.ItemStack;
 public class TagInfoHandler {
     
     public NBTWrapper tag;
-    public int id;
-    public int countState;
+    public byte id;
+    public byte countState;
+    public byte side;
     public int countCard;
     
     public ItemStack itemStack;
     
     public int count;
     public Vector<Integer> slotNum;
+    public int curSlot;
     
     public TagInfoHandler(NBTWrapper tag) {
         this.tag = tag;
         this.id = tag.getByte("id");
         this.countState = tag.getByte("countState");
+        this.side = tag.getByte("side");
         this.countCard = tag.getInt("count");
+        
         this.itemStack = initItem();
         
         this.count = 0;
         this.slotNum = new Vector<Integer>();
+        this.curSlot = 0;
     }
     
     private ItemStack initItem() {

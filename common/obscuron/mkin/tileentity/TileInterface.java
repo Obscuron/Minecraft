@@ -58,17 +58,118 @@ public class TileInterface extends KineticInventoryTile {
                     if (tagInfo[i].isSatisfied()) {
                         continue;
                     }
+                    
                     for (int j = 0; j < tagInfo.length; j++) {
-                        if (i == j) {
+                        if (i == j || tagInfo[j] == null) {
                             continue;
                         }
-                        if (compare(tagInfo[i].itemStack, tagInfo[j].tag)) {
-                            
+                        if (tagInfo[i].side == tagInfo[j].side) {
+                            continue;
+                        }
+                        if (tagInfo[i].id == 4 || compare(tagInfo[i].itemStack, tagInfo[j].tag)) {
+                            transferItems(tagInfo, sides, i, j);
                         }
                     }
                 }
             }
         }
+    }
+    
+    private void transferItems(TagInfoHandler[] tagInfo, IInventory[] sides, int from, int to) {
+        int numReq = tagInfo[from].numRequired();
+        int maxNum = Integer.MAX_VALUE;
+        if (tagInfo[to].isSatisfied()) {
+            maxNum = tagInfo[to].numRequired();
+        }
+        IInventory fromInv = sides[tagInfo[from].side];
+        IInventory toInv = sides[tagInfo[to].side];
+        
+        if (numReq < 0) {
+            int maxTransfer = -numReq;
+            if (maxNum > 0) {
+                maxTransfer = Math.min(-numReq, maxNum);
+            }
+            tagInfo[from].curSlot = 0;
+            for (int slot : tagInfo[to].slotNum) {
+                ItemStack toItem = toInv.getStackInSlot(slot);
+                if (compare(toItem, tagInfo[from].tag)) {
+                    int diff = toItem.getMaxStackSize() - toItem.stackSize;
+                    if (diff <= 0) {
+                        continue;
+                    }
+                    diff = Math.min(diff, maxTransfer);
+                    maxTransfer = transferToSlot(toItem, toInv, slot, fromInv, tagInfo[from], diff, maxTransfer);
+                }
+                if (maxTransfer == 0) {
+                    return;
+                }
+            }
+            for (int i = 0; i < toInv.getSizeInventory(); i++) {
+                ItemStack toItem = toInv.getStackInSlot(i);
+                if (toItem == null) {
+                    int diff = 64;
+                    if (!(tagInfo[from].id == 4)) {
+                        diff = tagInfo[from].itemStack.getMaxStackSize();
+                    }
+                    diff = Math.min(diff, maxTransfer);
+                    maxTransfer = transferToSlot(toItem, toInv, i, fromInv, tagInfo[from], diff, maxTransfer);
+                }
+                
+                if (maxTransfer == 0) {
+                    return;
+                }
+            }
+            
+            tagInfo[from].curSlot = 0;
+            
+        }
+        else if (numReq > 0) {
+            
+        }
+    }
+
+    private int transferToSlot(ItemStack toItem, IInventory toInv, int toSlot, IInventory fromInv, TagInfoHandler tagInfo, int diff, int maxTransfer) {
+        while (tagInfo.curSlot < tagInfo.slotNum.size()) {
+            System.out.println(toSlot);
+            ItemStack fromItem = fromInv.getStackInSlot(tagInfo.slotNum.get(tagInfo.curSlot));
+            if (toItem != null) {
+                if (!InvUtil.areStacksEqual(toItem, fromItem)) {
+                    tagInfo.curSlot++;
+                    continue;
+                }
+            }
+            if (fromItem.stackSize > diff) {
+                if (toItem == null) {
+                    toItem = fromItem.copy();
+                    toInv.setInventorySlotContents(toSlot, toItem);
+                    toItem.stackSize = diff;
+                }
+                else {
+                    toItem.stackSize += diff;
+                }
+                fromItem.stackSize -= diff;
+                maxTransfer -= diff;
+                break;
+            }
+            else {
+                if (toItem == null) {
+                    toItem = fromItem.copy();
+                    toInv.setInventorySlotContents(toSlot, toItem);
+                    toItem.stackSize = fromItem.stackSize;
+                }
+                else {
+                    toItem.stackSize += fromItem.stackSize;
+                }
+                diff -= fromItem.stackSize;
+                maxTransfer -= fromItem.stackSize;
+                fromInv.setInventorySlotContents(tagInfo.slotNum.get(tagInfo.curSlot), null);
+                tagInfo.slotNum.remove(0);
+            }
+            if (diff == 0) {
+                break;
+            }
+        }
+        return maxTransfer;
     }
     
     private void parseInv(TagInfoHandler tagInfo, IInventory inv) {
