@@ -83,57 +83,67 @@ public class TileInterface extends KineticInventoryTile {
         if (tagInfo[to].isSatisfied()) {
             maxNum = tagInfo[to].numRequired();
         }
-        IInventory fromInv = sides[tagInfo[from].side];
-        IInventory toInv = sides[tagInfo[to].side];
+        
+        int maxTransfer = 0;
         
         if (numReq < 0) {
-            int maxTransfer = -numReq;
+            maxTransfer = -numReq;
             if (maxNum > 0) {
                 maxTransfer = Math.min(-numReq, maxNum);
-            }
-            for (int slot : tagInfo[to].slotNum) {
-                ItemStack toItem = toInv.getStackInSlot(slot);
-                if (compare(toItem, tagInfo[from].tag)) {
-                    int diff = toItem.getMaxStackSize() - toItem.stackSize;
-                    if (diff <= 0) {
-                        continue;
-                    }
-                    diff = Math.min(diff, maxTransfer);
-                    maxTransfer = transferToSlot(toItem, toInv, slot, fromInv, tagInfo[from], diff, maxTransfer);
-                }
-                if (maxTransfer == 0) {
-                    return;
-                }
-            }
-            for (int i = 0; i < toInv.getSizeInventory(); i++) {
-                ItemStack toItem = toInv.getStackInSlot(i);
-                if (toItem == null) {
-                    int diff = 64;
-                    if (!(tagInfo[from].id == 4)) {
-                        diff = tagInfo[from].itemStack.getMaxStackSize();
-                    }
-                    diff = Math.min(diff, maxTransfer);
-                    maxTransfer = transferToSlot(toItem, toInv, i, fromInv, tagInfo[from], diff, maxTransfer);
-                }
-                
-                if (maxTransfer == 0) {
-                    return;
-                }
             }
             
         }
         else if (numReq > 0) {
-            int maxTransfer = numReq;
+            maxTransfer = numReq;
             if (maxNum > 0) {
                 maxTransfer = Math.min(numReq, maxNum);
+            }
+            to = to ^ from;
+            from = to ^ from;
+            to = to ^ from;
+        }
+        
+        IInventory fromInv = sides[tagInfo[from].side];
+        IInventory toInv = sides[tagInfo[to].side];
+        for (int slot : tagInfo[to].slotNum) {
+            ItemStack toItem = toInv.getStackInSlot(slot);
+            if (compare(toItem, tagInfo[from].tag)) {
+                int diff = toItem.getMaxStackSize() - toItem.stackSize;
+                if (diff <= 0) {
+                    continue;
+                }
+                diff = Math.min(diff, maxTransfer);
+                maxTransfer = transferToSlot(toItem, toInv, slot, fromInv, tagInfo[from], tagInfo[to], diff, maxTransfer);
+            }
+            if (maxTransfer == 0) {
+                return;
+            }
+        }
+        for (int i = 0; i < toInv.getSizeInventory(); i++) {
+            ItemStack toItem = toInv.getStackInSlot(i);
+            if (toItem == null) {
+                int diff = 64;
+                if (!(tagInfo[from].id == 4)) {
+                    diff = tagInfo[from].itemStack.getMaxStackSize();
+                }
+                diff = Math.min(diff, maxTransfer);
+                maxTransfer = transferToSlot(toItem, toInv, i, fromInv, tagInfo[from], tagInfo[to], diff, maxTransfer);
+            }
+            
+            if (maxTransfer == 0) {
+                return;
             }
         }
     }
 
-    private int transferToSlot(ItemStack toItem, IInventory toInv, int toSlot, IInventory fromInv, TagInfoHandler tagInfo, int diff, int maxTransfer) {
+    private int transferToSlot(ItemStack toItem, IInventory toInv, int toSlot, IInventory fromInv, TagInfoHandler tagInfoFrom, TagInfoHandler tagInfoTo, int diff, int maxTransfer) {
         int curSlot = 0;
-        while (curSlot < tagInfo.slotNum.size()) {
-            ItemStack fromItem = fromInv.getStackInSlot(tagInfo.slotNum.get(curSlot));
+        while (curSlot < tagInfoFrom.slotNum.size()) {
+            ItemStack fromItem = fromInv.getStackInSlot(tagInfoFrom.slotNum.get(curSlot));
+            if (!compare(fromItem, tagInfoTo.tag)) {
+                curSlot++;
+                continue;
+            }
             if (toItem != null) {
                 if (!InvUtil.areStacksEqual(toItem, fromItem)) {
                     curSlot++;
@@ -151,6 +161,8 @@ public class TileInterface extends KineticInventoryTile {
                 }
                 fromItem.stackSize -= diff;
                 maxTransfer -= diff;
+                tagInfoFrom.count -= diff;
+                tagInfoTo.count += diff;
                 break;
             }
             else {
@@ -164,8 +176,10 @@ public class TileInterface extends KineticInventoryTile {
                 }
                 diff -= fromItem.stackSize;
                 maxTransfer -= fromItem.stackSize;
-                fromInv.setInventorySlotContents(tagInfo.slotNum.get(curSlot), null);
-                tagInfo.slotNum.remove(0);
+                fromInv.setInventorySlotContents(tagInfoFrom.slotNum.get(curSlot), null);
+                tagInfoFrom.slotNum.remove(0);
+                tagInfoFrom.count -= diff;
+                tagInfoTo.count += diff;
             }
             if (diff == 0) {
                 break;
