@@ -9,6 +9,8 @@ import obscuron.mkin.util.InvUtil;
 import obscuron.mkin.util.NBTWrapper;
 import obscuron.mkin.util.TagInfoHandler;
 
+import com.google.common.base.Objects;
+
 public class TileInterface extends KineticInventoryTile {
 
     public static final int SIZE = 3*3;
@@ -89,7 +91,6 @@ public class TileInterface extends KineticInventoryTile {
             if (maxNum > 0) {
                 maxTransfer = Math.min(-numReq, maxNum);
             }
-            tagInfo[from].curSlot = 0;
             for (int slot : tagInfo[to].slotNum) {
                 ItemStack toItem = toInv.getStackInSlot(slot);
                 if (compare(toItem, tagInfo[from].tag)) {
@@ -120,21 +121,22 @@ public class TileInterface extends KineticInventoryTile {
                 }
             }
             
-            tagInfo[from].curSlot = 0;
-            
         }
         else if (numReq > 0) {
-            
+            int maxTransfer = numReq;
+            if (maxNum > 0) {
+                maxTransfer = Math.min(numReq, maxNum);
+            }
         }
     }
 
     private int transferToSlot(ItemStack toItem, IInventory toInv, int toSlot, IInventory fromInv, TagInfoHandler tagInfo, int diff, int maxTransfer) {
-        while (tagInfo.curSlot < tagInfo.slotNum.size()) {
-            System.out.println(toSlot);
-            ItemStack fromItem = fromInv.getStackInSlot(tagInfo.slotNum.get(tagInfo.curSlot));
+        int curSlot = 0;
+        while (curSlot < tagInfo.slotNum.size()) {
+            ItemStack fromItem = fromInv.getStackInSlot(tagInfo.slotNum.get(curSlot));
             if (toItem != null) {
                 if (!InvUtil.areStacksEqual(toItem, fromItem)) {
-                    tagInfo.curSlot++;
+                    curSlot++;
                     continue;
                 }
             }
@@ -162,7 +164,7 @@ public class TileInterface extends KineticInventoryTile {
                 }
                 diff -= fromItem.stackSize;
                 maxTransfer -= fromItem.stackSize;
-                fromInv.setInventorySlotContents(tagInfo.slotNum.get(tagInfo.curSlot), null);
+                fromInv.setInventorySlotContents(tagInfo.slotNum.get(curSlot), null);
                 tagInfo.slotNum.remove(0);
             }
             if (diff == 0) {
@@ -196,7 +198,7 @@ public class TileInterface extends KineticInventoryTile {
         if (tag.getByte("id") > 1 && item.getItemDamage() != cardItem.getItemDamage()) {
             return false;
         }
-        if (tag.getByte("id") > 2 && item.getTagCompound() != cardItem.getTagCompound()) {
+        if (tag.getByte("id") > 2 && !Objects.equal(item.getTagCompound(),cardItem.getTagCompound())) {
             return false;
         }
         

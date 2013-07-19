@@ -16,7 +16,6 @@ public class TagInfoHandler {
     
     public int count;
     public Vector<Integer> slotNum;
-    public int curSlot;
     
     public TagInfoHandler(NBTWrapper tag) {
         this.tag = tag;
@@ -29,7 +28,6 @@ public class TagInfoHandler {
         
         this.count = 0;
         this.slotNum = new Vector<Integer>();
-        this.curSlot = 0;
     }
     
     private ItemStack initItem() {
